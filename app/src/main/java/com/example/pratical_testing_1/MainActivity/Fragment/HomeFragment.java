@@ -3,6 +3,7 @@ package com.example.pratical_testing_1.MainActivity.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
     Button buttonCat, buttonDog, buttonLogout;
     SharedPrefHelper sharedPrefHelper;
     TextView heading;
+    private ActivityResultLauncher<Intent> mediaPickerLauncher;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class HomeFragment extends Fragment {
 
         sharedPrefHelper = new SharedPrefHelper(getContext());
         heading.setText(sharedPrefHelper.getUserName());
+
 
         buttonCat.setOnClickListener(new View.OnClickListener() {
             @Override

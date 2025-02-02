@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         // AppBarConfiguration ensures correct toolbar behavior
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.homeFragment, R.id.aboutFragment) // Top-level destinations
+                R.id.homeFragment, R.id.myAnimalFragment) // Top-level destinations
                 .build();
 
         // Connect Toolbar with NavController
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         //clear up the stack when switching tabs
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.homeFragment || itemId == R.id.aboutFragment) {
+            if (itemId == R.id.homeFragment || itemId == R.id.myAnimalFragment) {
                 // Pop everything up to Home or About to prevent stacking
                 navController.popBackStack(itemId, true);
                 navController.navigate(itemId);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Enable the Up button for back navigation for other than top level
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.homeFragment || destination.getId() == R.id.aboutFragment) {
+            if (destination.getId() == R.id.homeFragment || destination.getId() == R.id.myAnimalFragment) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);

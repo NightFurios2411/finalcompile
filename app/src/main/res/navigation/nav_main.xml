@@ -13,7 +13,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/to_aboutFragment"
-            app:destination="@id/aboutFragment" />
+            app:destination="@id/myAnimalFragment" />
         <action
             android:id="@+id/to_catFragment"
             app:destination="@id/catFragment" />
@@ -46,10 +46,10 @@
 
     <!-- About Fragment -->
     <fragment
-        android:id="@+id/aboutFragment"
-        android:name="com.example.pratical_testing_1.MainActivity.Fragment.AboutAppFragment"
-        android:label="About App"
-        tools:layout="@layout/fragment_about_app_fragment">
+        android:id="@+id/myAnimalFragment"
+        android:name="com.example.pratical_testing_1.MainActivity.Fragment.MyAnimalFragment"
+        android:label="My Animal"
+        tools:layout="@layout/fragment_my_animal_fragment">
         <action
             android:id="@+id/to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -66,7 +66,7 @@
         tools:layout="@layout/fragment_add_animal">
         <action
             android:id="@+id/to_aboutFragment"
-            app:destination="@id/aboutFragment" />
+            app:destination="@id/myAnimalFragment" />
     </fragment>
 
 

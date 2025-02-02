@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".MainActivity.Fragment.AboutAppFragment">
+    tools:context=".MainActivity.Fragment.MyAnimalFragment">
 
     <!-- RecyclerView to display animal logs -->
     <androidx.recyclerview.widget.RecyclerView

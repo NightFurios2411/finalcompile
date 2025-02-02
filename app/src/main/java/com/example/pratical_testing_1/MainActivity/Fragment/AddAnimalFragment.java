@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -44,9 +46,9 @@ public class AddAnimalFragment extends Fragment {
     private DatabaseHelper databaseHelper;
     private FusedLocationProviderClient fusedLocationClient;
     private String currentLocation = "Not Captured";
-    private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     SharedPrefHelper sharedPrefHelper;
+    private ActivityResultLauncher<Intent> mediaPickerLauncher;
 
 
     @Override
@@ -82,6 +84,17 @@ public class AddAnimalFragment extends Fragment {
                 openGallery();
             }
         });
+
+        // Initialize the Media Picker Launcher
+        mediaPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData(); // Get Image URI
+                        imgAnimal.setImageURI(imageUri); // Display Image in ImageView
+                    }
+                }
+        );
 
         // Set up audio file path based on timestamp
         String timestamp = String.valueOf(System.currentTimeMillis());
@@ -139,17 +152,7 @@ public class AddAnimalFragment extends Fragment {
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            imageUri = data.getData(); // Get Image URI
-            imgAnimal.setImageURI(imageUri); // Display Image in ImageView
-        }
+        mediaPickerLauncher.launch(intent);
     }
 
     // Method to save animal data

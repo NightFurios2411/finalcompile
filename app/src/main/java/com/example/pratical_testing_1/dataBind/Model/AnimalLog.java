@@ -10,8 +10,18 @@ public class AnimalLog {
     private String location;
     private String imagePath;
 
+    public int getAnimalid() {
+        return animalid;
+    }
+
+    public void setAnimalid(int animalid) {
+        this.animalid = animalid;
+    }
+
+    private int animalid;
+
     // Constructor
-    public AnimalLog(int id, String name, String species, String description, String audioPath, String location, String imagePath) {
+    public AnimalLog(int id, String name, String species, String description, String audioPath, String location, String imagePath, int animalid) {
         this.id = id;
         this.name = name;
         this.species = species;
@@ -19,6 +29,7 @@ public class AnimalLog {
         this.audioPath = audioPath;
         this.location = location;
         this.imagePath = imagePath;
+        this.animalid = animalid;
     }
 
     // Empty Constructor (for SQLite)

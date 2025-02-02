@@ -66,13 +66,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 AnimalLog animalLog = new AnimalLog(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("userID")), // ID
+                        cursor.getInt(cursor.getColumnIndexOrThrow("userID")), // user ID
                         cursor.getString(cursor.getColumnIndexOrThrow("name")), // Name
                         cursor.getString(cursor.getColumnIndexOrThrow("species")), // Species
                         cursor.getString(cursor.getColumnIndexOrThrow("description")), // Description
                         cursor.getString(cursor.getColumnIndexOrThrow("location")), // Location
                         cursor.getString(cursor.getColumnIndexOrThrow("audioPath")), // Audio Path
-                        cursor.getString(cursor.getColumnIndexOrThrow("imagePath")) // Image Path
+                        cursor.getString(cursor.getColumnIndexOrThrow("imagePath")), // Image Path
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")) // id
                 );
                 animalLogs.add(animalLog);
             } while (cursor.moveToNext());
@@ -98,7 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("description")), // Description
                         cursor.getString(cursor.getColumnIndexOrThrow("location")), // Location
                         cursor.getString(cursor.getColumnIndexOrThrow("audioPath")), // Audio Path
-                        cursor.getString(cursor.getColumnIndexOrThrow("imagePath")) // Image Path
+                        cursor.getString(cursor.getColumnIndexOrThrow("imagePath")), // Image Path
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")) // id
                 );
                 animalLogs.add(animalLog);
             } while (cursor.moveToNext());
@@ -121,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("location", animal.getLocation());
         values.put("imagePath", animal.getImagePath());
 
-        int result = db.update("animals", values, "userID=?", new String[]{String.valueOf(animal.getId())});
+        int result = db.update("animals", values, "id=?", new String[]{String.valueOf(animal.getAnimalid())});
         db.close();
         return result > 0; // Returns true if update was successful
     }

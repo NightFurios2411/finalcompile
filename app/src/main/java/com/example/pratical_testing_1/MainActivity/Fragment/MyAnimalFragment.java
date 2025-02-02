@@ -3,12 +3,12 @@ package com.example.pratical_testing_1.MainActivity.Fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,14 +32,13 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
-public class AboutAppFragment extends Fragment {
+public class MyAnimalFragment extends Fragment {
 
     private RecyclerView recyclerViewAnimals;
     private FloatingActionButton fabAddAnimal;
     private AnimalLogAdapter animalLogAdapter;
     private DatabaseHelper databaseHelper;
     private List<AnimalLog> animalLogList;
-    private static final int PICK_IMAGE_REQUEST = 1;
     private int selectedPosition;
     View viewpopup;
     private EditText etEditAnimalName, etEditAnimalSpecies, etEditAnimalDescription, etEditAnimalLocation;
@@ -48,12 +47,13 @@ public class AboutAppFragment extends Fragment {
     private ShapeableImageView imgEditAnimal;
     private Uri selectedImageUri;
     SharedPrefHelper sharedPrefHelper;
+    private ActivityResultLauncher<Intent> mediaPickerLauncher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_about_app_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_animal_fragment, container, false);
 
         // Initialize RecyclerView and FAB
         recyclerViewAnimals = view.findViewById(R.id.recyclerViewAnimals);
@@ -73,6 +73,20 @@ public class AboutAppFragment extends Fragment {
             // Navigate to AddAnimalFragment
             Navigation.findNavController(view).navigate(R.id.to_addAnimalFragment);
         });
+
+        // Initialize the Media Picker Launcher
+        mediaPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData(); // Get Image URI
+                        Glide.with(getContext())
+                                .load(selectedImageUri)
+                                .into(imgEditAnimal); // Replace with your ImageView reference
+
+                    }
+                }
+        );
 
         return view;
     }
@@ -100,6 +114,8 @@ public class AboutAppFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         initializeUIAlert();
         builder.setView(viewpopup);
+
+        selectedImageUri = null;
 
         etEditAnimalName.setText(animalLog.getName());
         etEditAnimalSpecies.setText(animalLog.getSpecies());
@@ -141,6 +157,10 @@ public class AboutAppFragment extends Fragment {
             boolean isUpdated = databaseHelper.updateAnimal(animalLog);
             if (isUpdated) {
                 animalLogAdapter.notifyItemChanged(position);
+                if (selectedImageUri != null) {
+                    animalLogAdapter.updateSelectedImage(selectedImageUri, position);
+
+                }
                 Toast.makeText(requireContext(), "Animal updated successfully!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             } else {
@@ -150,7 +170,8 @@ public class AboutAppFragment extends Fragment {
 
         btnCancelEdit.setOnClickListener(v -> dialog.dismiss());
     }
-    private void initializeUIAlert(){
+
+    private void initializeUIAlert() {
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         viewpopup = inflater.inflate(R.layout.editanimalpopup, null);
@@ -175,17 +196,7 @@ public class AboutAppFragment extends Fragment {
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            selectedImageUri = data.getData();
-            imgEditAnimal.setImageURI(selectedImageUri); // Display Image in ImageView Alert Dialog
-        }
+        mediaPickerLauncher.launch(intent);
     }
 
 
